@@ -1,0 +1,49 @@
+{
+  "name": "electron-as-wallpaper",
+  "version": "0.0.1-dev",
+  "author": {
+    "name": "meslzy",
+    "email": "i@meslzy.com",
+    "url": "https://meslzy.com/"
+  },
+  "description": "set your electron window as wallpaper behind desktop icons",
+  "keywords": [
+    "electron",
+    "wallpaper"
+  ],
+  "main": "output/index.js",
+  "scripts": {
+    "watch": "tsc --watch",
+    "build": "tsc --build",
+    "configure": "node-gyp configure",
+    "rebuild": "node-gyp rebuild",
+    "test": "electron test/index.js"
+  },
+  "dependencies": {
+    "bindings": "^1.5.0",
+    "node-addon-api": "^4.2.0"
+  },
+  "devDependencies": {
+    "@meslzy/tsconfig": "C:/Developer/@meslzy/tsconfig",
+    "@types/node": "^16.11.21",
+    "@typescript-eslint/eslint-plugin": "^5.10.0",
+    "@typescript-eslint/parser": "^5.10.0",
+    "electron": "^16.0.7",
+    "eslint": "^8.7.0",
+    "typescript": "^4.4.3"
+  },
+  "files": [
+    "build",
+    "output"
+  ],
+  "gypfile": true,
+  "repository": "github:meslzy/electron-as-wallpaper",
+  "bugs": {
+    "url": "https://github.com/meslzy/electron-as-wallpaper/issues"
+  },
+  "homepage": "https://github.com/meslzy/electron-as-wallpaper#readme",
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT"
+}

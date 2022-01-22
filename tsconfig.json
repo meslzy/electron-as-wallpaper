@@ -1,0 +1,14 @@
+{
+  "extends": "@meslzy/tsconfig",
+  "compilerOptions": {
+    "rootDir": "source",
+    "outDir": "output"
+  },
+  "include": [
+    "source"
+  ],
+  "exclude": [
+    "node_modules",
+    "output"
+  ]
+}
