@@ -40,10 +40,11 @@
   
   // if the window closed before detach, you can call refresh
   refresh();
-	```
+  ```
 
 - ### Examples
-	- [multiple displays](test/index.js)
+	- [screen size changed](test/screen-size-changed/index.js)
+	- [transparent](test/transparent/index.js)
 
 ---
 
