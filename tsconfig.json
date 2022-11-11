@@ -1,14 +1,24 @@
 {
-  "extends": "@meslzy/tsconfig",
   "compilerOptions": {
+    "strict": true,
+    //
+    "target": "esnext",
+    "module": "commonjs",
+    "lib": [
+      "esnext",
+      "dom"
+    ],
+    //
     "rootDir": "source",
-    "outDir": "output"
+    "outDir": "dist",
+    //
+    "declaration": true,
+    "sourceMap": true
   },
   "include": [
     "source"
   ],
   "exclude": [
-    "node_modules",
-    "output"
+    "dist"
   ]
 }

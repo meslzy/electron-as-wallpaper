@@ -1,6 +1,6 @@
 {
   "name": "electron-as-wallpaper",
-  "version": "0.0.1-dev",
+  "version": "0.0.2-dev",
   "author": {
     "name": "meslzy",
     "email": "i@meslzy.com",
@@ -11,20 +11,18 @@
     "electron",
     "wallpaper"
   ],
-  "main": "output/index.js",
+  "main": "dist/index.js",
   "scripts": {
     "watch": "tsc --watch",
     "build": "tsc --build",
     "configure": "node-gyp configure",
-    "rebuild": "node-gyp rebuild",
-    "test": "electron test/index.js"
+    "rebuild": "node-gyp rebuild"
   },
   "dependencies": {
     "bindings": "^1.5.0",
     "node-addon-api": "^4.2.0"
   },
   "devDependencies": {
-    "@meslzy/tsconfig": "C:/Developer/@meslzy/tsconfig",
     "@types/node": "^16.11.21",
     "@typescript-eslint/eslint-plugin": "^5.10.0",
     "@typescript-eslint/parser": "^5.10.0",
@@ -34,7 +32,7 @@
   },
   "files": [
     "build",
-    "output"
+    "dist"
   ],
   "gypfile": true,
   "repository": "github:meslzy/electron-as-wallpaper",

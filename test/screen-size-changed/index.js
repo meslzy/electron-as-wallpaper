@@ -1,5 +1,5 @@
 const {app, BrowserWindow, screen} = require("electron");
-const {attach} = require("../output/index");
+const {attach} = require("../../dist/index");
 
 app.on("ready", async () => {
 	const win1 = new BrowserWindow({
@@ -20,16 +20,16 @@ app.on("ready", async () => {
 			backgroundThrottling: false,
 		}
 	});
-	
+
 	await win1.loadURL("https://www.nayuki.io/res/full-screen-clock-javascript/full-screen-clock-24hr-with-seconds.html");
 	await win2.loadURL("https://www.nayuki.io/res/full-screen-clock-javascript/full-screen-clock-24hr-with-seconds.html");
-	
-	const displays = screen.getAllDisplays(); // i have 2 display
+
+	const displays = screen.getAllDisplays(); // I have 2 display
 	// set the first screen bounds to the first window
 	win1.setBounds(displays[0].bounds);
 	// set the second screen bounds to the second window
 	win2.setBounds(displays[1].bounds);
-	
+
 	// when display resolution changed
 	screen.on("display-metrics-changed", () => {
 		const displays = screen.getAllDisplays(); // i have 2 display

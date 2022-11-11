@@ -3,11 +3,30 @@
 
 using namespace Napi;
 
+DWORD MakeWindowTransparent(HWND hWnd, unsigned char factor)
+{
+  auto windowLong = SetWindowLong(hWnd,GWL_EXSTYLE, GetWindowLong(hWnd, GWL_EXSTYLE) | WS_EX_LAYERED);
+
+  if ((windowLong == 0) && (GetLastError() != 0)) {
+    return FALSE;
+  }
+
+  if (!SetLayeredWindowAttributes(hWnd, 0, factor, LWA_ALPHA))
+  {
+    return FALSE;
+  }
+
+  return TRUE;
+}
+
 Napi::Value Attach(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
 
     Napi::Buffer<void *> wndHandle = info[0].As<Napi::Buffer<void*>>();
     HWND win = static_cast<HWND>(*reinterpret_cast<void **>(wndHandle.Data()));
+
+    Napi::Object options = info[1].As<Napi::Object>();
+    Napi::Boolean transparent = options.Get("transparent").As<Napi::Boolean>();
 
     HWND progmanHandle = FindWindow("Progman", nullptr);
 
@@ -32,6 +51,10 @@ Napi::Value Attach(const Napi::CallbackInfo &info) {
     }
 
     SetParent(win, workerW);
+
+    if (transparent) {
+        MakeWindowTransparent(win, 200);
+    }
 
     return Napi::Boolean::New(env, true);
 }
