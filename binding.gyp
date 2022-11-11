@@ -2,7 +2,7 @@
   'targets': [
     {
       'target_name': 'electron-as-wallpaper',
-      'sources': [ "source/binding/index.cpp" ],
+      'sources': [ "lib/index.cpp" ],
       'include_dirs': ["<!@(node -p \"require('node-addon-api').include\")"],
       'dependencies': ["<!(node -p \"require('node-addon-api').gyp\")"],
       'cflags!': [ '-fno-exceptions' ],
