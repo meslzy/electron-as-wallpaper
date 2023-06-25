@@ -1,19 +1,9 @@
 {
+  "extends": "@meslzy/tsconfig",
   "compilerOptions": {
-    "strict": true,
-    //
-    "target": "esnext",
     "module": "commonjs",
-    "lib": [
-      "esnext",
-      "dom"
-    ],
-    //
     "rootDir": "source",
-    "outDir": "dist",
-    //
-    "declaration": true,
-    "sourceMap": true
+    "outDir": "dist"
   },
   "include": [
     "source"

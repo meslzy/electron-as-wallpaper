@@ -24,6 +24,13 @@
 
 ---
 
+## Features (⭐)
+
+- [x] set electron window as wallpaper
+- [x] support transparent window
+- [x] support mouse forwarding
+- [x] support keyboard forwarding
+
 ## Getting Started (✅)
 
 - ### Installation (⏬)
@@ -43,8 +50,9 @@
   ```
 
 - ### Examples
-	- [screen size changed](test/screen-size-changed/index.js)
 	- [transparent](test/transparent/index.js)
+	- [input forwarding](test/input-forwarding/index.js)
+	- [screen size changed](test/screen-size-changed/index.js)
 
 ---
 

@@ -5,3 +5,5 @@ package-lock.json
 
 build/
 dist/
+
+cmake-build-debug/
