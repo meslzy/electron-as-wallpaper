@@ -1,6 +1,6 @@
 {
   "name": "electron-as-wallpaper",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "author": {
     "name": "meslzy",
     "email": "i@meslzy.com",
@@ -25,8 +25,10 @@
     "build": "tsc --build",
     "gyp:configure": "node-gyp configure",
     "gyp:rebuild": "node-gyp rebuild",
+    "pretest": "npm run gyp:rebuild",
     "test": "electron test/input-forwarding/index.js",
-    "prepublishOnly": "npm run build && npm run gyp:rebuild"
+    "prepublishOnly": "npm run build && npm run gyp:rebuild",
+    "publish-me": "npm publish --access public"
   },
   "dependencies": {
     "bindings": "^1.5.0",

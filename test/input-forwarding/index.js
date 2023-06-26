@@ -3,10 +3,10 @@ const {attach, detach} = require("../../dist/index");
 
 app.on("ready", async () => {
   const win = new BrowserWindow({
+    transparent: true,
     autoHideMenuBar: true,
     show: false,
     frame: false,
-    transparent: true,
   });
 
   const size = screen.getPrimaryDisplay().size;
@@ -25,9 +25,14 @@ app.on("ready", async () => {
   });
 
   attach(win, {
+    transparent: true,
     forwardKeyboardInput: true,
     forwardMouseInput: true,
   });
 
   win.show();
+
+  setTimeout(() => {
+    detach(win);
+  }, 10000);
 });

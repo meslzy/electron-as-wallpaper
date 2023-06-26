@@ -16,16 +16,12 @@ struct Window {
 
 std::vector<Window> windows;
 
-void makeWindowTransparent(HWND windowHandle, bool toggle) {
-  auto windowLong = GetWindowLong(windowHandle, GWL_EXSTYLE);
-
-  if (toggle) {
-    windowLong |= WS_EX_LAYERED;
-    SetWindowLong(windowHandle, GWL_EXSTYLE, windowLong);
+void makeWindowTransparent(HWND windowHandle, bool active) {
+  if (active) {
+    SetWindowLong(windowHandle,GWL_EXSTYLE,GetWindowLong(windowHandle, GWL_EXSTYLE) | WS_EX_LAYERED);
     SetLayeredWindowAttributes(windowHandle, 0, 255, LWA_ALPHA);
   } else {
-    windowLong &= ~WS_EX_LAYERED;
-    SetWindowLong(windowHandle, GWL_EXSTYLE, windowLong);
+    SetWindowLong(windowHandle,GWL_EXSTYLE,GetWindowLong(windowHandle, GWL_EXSTYLE) & ~WS_EX_LAYERED);
   }
 }
 
@@ -273,13 +269,20 @@ void attach(const Napi::CallbackInfo &info) {
     return;
   }
 
+  Window window = {
+      windowHandle,
+      transparent,
+      forwardMouseInput,
+      forwardKeyboardInput
+  };
+
   SetParent(windowHandle, workerW);
 
   if (transparent) {
     makeWindowTransparent(windowHandle, true);
   }
 
-  windows.push_back({windowHandle, transparent, forwardMouseInput, forwardKeyboardInput});
+  windows.push_back(window);
 
   if (!windows.empty()) {
     startForwardingRawInput(env);
@@ -293,13 +296,15 @@ void detach(const Napi::CallbackInfo &info) {
   auto buffer = info[0].As<Napi::Buffer<void *>>();
   HWND windowHandle = static_cast<HWND>(*reinterpret_cast<void **>(buffer.Data()));
 
+  SetParent(windowHandle, nullptr);
+
   auto window = std::find_if(windows.begin(), windows.end(), [windowHandle](const Window &window) {
     return window.handle == windowHandle;
   });
 
   if (window != windows.end()) {
     if (window->transparent) {
-      makeWindowTransparent(windowHandle, false);
+      makeWindowTransparent(window->handle, false);
     }
 
     windows.erase(window);
