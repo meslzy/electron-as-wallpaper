@@ -8,10 +8,10 @@
 using namespace Napi;
 
 struct Window {
-    HWND handle;
-    bool transparent;
-    bool forwardMouseInput;
-    bool forwardKeyboardInput;
+  HWND handle;
+  bool transparent;
+  bool forwardMouseInput;
+  bool forwardKeyboardInput;
 };
 
 std::vector<Window> windows;
@@ -69,12 +69,14 @@ void postMouseMessage(UINT uMsg, WPARAM wParam, POINT point) {
     return;
   }
 
-  auto lParam = static_cast<std::uint32_t>(point.y);
-  lParam <<= 16;
-  lParam |= static_cast<std::uint32_t>(point.x);
-
   for (auto &window: windows) {
     if (window.forwardMouseInput) {
+      ScreenToClient(window.handle, &point);
+
+      auto lParam = static_cast<std::uint32_t>(point.y);
+      lParam <<= 16;
+      lParam |= static_cast<std::uint32_t>(point.x);
+
       PostMessage(window.handle, uMsg, wParam, lParam);
     }
   }
@@ -257,13 +259,13 @@ void attach(const Napi::CallbackInfo &info) {
   static HWND workerW = nullptr;
 
   EnumWindows([](HWND topHandle, LPARAM topParamHandle) {
-      HWND shellDllDefView = FindWindowEx(topHandle, nullptr, "SHELLDLL_DefView", nullptr);
+    HWND shellDllDefView = FindWindowEx(topHandle, nullptr, "SHELLDLL_DefView", nullptr);
 
-      if (shellDllDefView != nullptr) {
-        workerW = FindWindowEx(nullptr, topHandle, "WorkerW", nullptr);
-      }
+    if (shellDllDefView != nullptr) {
+      workerW = FindWindowEx(nullptr, topHandle, "WorkerW", nullptr);
+    }
 
-      return TRUE;
+    return TRUE;
   }, NULL);
 
   if (workerW == nullptr) {
@@ -292,7 +294,7 @@ void detach(const Napi::CallbackInfo &info) {
   HWND windowHandle = static_cast<HWND>(*reinterpret_cast<void **>(buffer.Data()));
 
   auto window = std::find_if(windows.begin(), windows.end(), [windowHandle](const Window &window) {
-      return window.handle == windowHandle;
+    return window.handle == windowHandle;
   });
 
   if (window != windows.end()) {

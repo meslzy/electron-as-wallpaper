@@ -13,9 +13,9 @@ app.on("ready", async () => {
 
   win.setBounds({
     x: 0,
-    y: 0,
+    y: 200,
     width: size.width,
-    height: size.height,
+    height: size.height - 200,
   });
 
   await win.loadURL("https://www.google.com/");
