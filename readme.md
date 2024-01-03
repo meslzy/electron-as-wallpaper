@@ -1,6 +1,7 @@
 # Electron As Wallpaper (✨)
 
 > set your electron window as wallpaper behind desktop icons
+
 ---
 
 <div align="center">
@@ -8,7 +9,7 @@
 ![license](https://badgen.net/badge/license/MIT/blue)
 ![stars](https://badgen.net/npm/v/electron-as-wallpaper)
 ![forks](https://badgen.net/npm/dw/electron-as-wallpaper)
-![issues](https://badgen.net/github/issues/meslzy/electron-as-wallpaper)
+![issues](https://badgen.net/github/open-issues/meslzy/electron-as-wallpaper)
 
 </div>
 
@@ -34,7 +35,7 @@
 ## Getting Started (✅)
 
 - ### Installation (⏬)
-	- `npm install electron-as-wallpaper --save`
+    - `npm install electron-as-wallpaper --save`
 
 - ### How to use (🌠)
   ```js
@@ -50,9 +51,9 @@
   ```
 
 - ### Examples
-	- [transparent](test/transparent/index.js)
-	- [input forwarding](test/input-forwarding/index.js)
-	- [screen size changed](test/screen-size-changed/index.js)
+    - [transparent](exmaples/transparent/index.js)
+    - [input forwarding](exmaples/input-forwarding/index.js)
+    - [screen size changed](exmaples/screen-size-changed/index.js)
 
 ---
 

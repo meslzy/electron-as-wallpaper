@@ -1,5 +1,6 @@
-const { app, BrowserWindow } = require("electron");
-const { attach } = require("../../dist/index");
+const {app, BrowserWindow} = require("electron");
+
+const {attach} = require("../../dist/main");
 
 app.on("ready", async () => {
   const win = new BrowserWindow({
@@ -12,7 +13,7 @@ app.on("ready", async () => {
     transparent: true,
   });
 
-  await win.loadURL(`file://${ __dirname }/index.html`);
+  await win.loadURL(`file://${__dirname}/index.html`);
 
   win.webContents.openDevTools({
     mode: "detach",

@@ -1,6 +1,6 @@
 {
   "name": "electron-as-wallpaper",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "author": {
     "name": "meslzy",
     "email": "i@meslzy.com",
@@ -19,35 +19,38 @@
     "electron",
     "wallpaper"
   ],
-  "main": "dist/index.js",
+  "types": "dist/main.d.ts",
+  "main": "dist/main.js",
+  "type": "commonjs",
   "scripts": {
-    "watch": "tsc --watch",
-    "build": "tsc --build",
+    "watch": "rosepack -w",
+    "build": "rosepack",
+    "lint": "eslint . --ext .ts --fix",
     "gyp:configure": "node-gyp configure",
     "gyp:rebuild": "node-gyp rebuild",
-    "pretest": "npm run gyp:rebuild",
-    "test": "electron test/input-forwarding/index.js",
-    "prepublishOnly": "npm run build && npm run gyp:rebuild",
-    "publish-me": "npm publish --access public"
+    "test": "electron exmaples/demo/index.js",
+    "prepublishOnly": "npm run build",
+    "publish-me": "npm publish --access public",
+    "install": "node-gyp rebuild"
   },
   "dependencies": {
     "bindings": "^1.5.0",
     "node-addon-api": "^7.0.0",
-    "node-api-headers": "^1.0.1"
+    "node-api-headers": "^1.1.0"
   },
   "devDependencies": {
-    "@meslzy/eslint-config": "^0.5.0",
-    "@meslzy/tsconfig": "^0.2.1",
-    "@types/bindings": "^1.5.1",
-    "@types/node": "^20.3.1",
-    "electron": "^25.2.0",
-    "eslint": "^8.43.0",
-    "typescript": "^5.1.3"
+    "@meslzy/eslint-config": "^0.5.7",
+    "@meslzy/tsconfig": "^0.2.2",
+    "@types/bindings": "^1.5.5",
+    "@types/node": "^20.10.6",
+    "typescript": "^5.3.3",
+    "rosepack": "^1.0.13",
+    "electron": "^27.2.0",
+    "eslint": "^8.56.0"
   },
   "files": [
-    "build",
     "dist"
   ],
   "gypfile": true,
-  "license": "MIT"
+  "license": "mit"
 }

@@ -1,5 +1,6 @@
 const {app, BrowserWindow, screen} = require("electron");
-const {attach, detach} = require("../../dist/index");
+
+const {attach, refresh} = require("../../dist/main");
 
 app.on("ready", async () => {
   const win = new BrowserWindow({
@@ -9,13 +10,13 @@ app.on("ready", async () => {
     frame: false,
   });
 
-  const size = screen.getPrimaryDisplay().size;
+  const size = screen.getPrimaryDisplay().workAreaSize;
 
   win.setBounds({
     x: 0,
-    y: 200,
+    y: 0,
     width: size.width,
-    height: size.height - 200,
+    height: size.height,
   });
 
   await win.loadURL("https://www.google.com/");
@@ -31,8 +32,8 @@ app.on("ready", async () => {
   });
 
   win.show();
+});
 
-  setTimeout(() => {
-    detach(win);
-  }, 10000);
+app.on("quit", () => {
+  refresh();
 });

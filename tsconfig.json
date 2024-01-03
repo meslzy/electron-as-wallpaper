@@ -1,7 +1,6 @@
 {
   "extends": "@meslzy/tsconfig",
   "compilerOptions": {
-    "module": "commonjs",
     "rootDir": "source",
     "outDir": "dist"
   },

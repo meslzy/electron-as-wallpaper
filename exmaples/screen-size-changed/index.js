@@ -1,5 +1,6 @@
-const { app, BrowserWindow, screen } = require("electron");
-const { attach } = require("../../dist/index");
+const {app, BrowserWindow, screen} = require("electron");
+
+const {attach} = require("../../dist/main");
 
 app.on("ready", async () => {
   const win1 = new BrowserWindow({
@@ -21,10 +22,10 @@ app.on("ready", async () => {
     }
   });
 
-  await win1.loadURL("https://www.nayuki.io/res/full-screen-clock-javascript/full-screen-clock-24hr-with-seconds.html");
-  await win2.loadURL("https://www.nayuki.io/res/full-screen-clock-javascript/full-screen-clock-24hr-with-seconds.html");
+  await win1.loadURL("https://www.nayuki.io/res/full-screen-clock-javascript/full-screen-clock-12hr-with-seconds.html");
+  await win2.loadURL("https://www.nayuki.io/res/full-screen-clock-javascript/full-screen-clock-12hr-with-seconds.html");
 
-  const [ display1, display2 ] = screen.getAllDisplays();
+  const [display1, display2] = screen.getAllDisplays();
 
   if (!display1 || !display2) {
     throw new Error("No enough displays");
@@ -37,7 +38,7 @@ app.on("ready", async () => {
 
   // when display resolution changed
   screen.on("display-metrics-changed", () => {
-    const [ display1, display2 ] = screen.getAllDisplays();
+    const [display1, display2] = screen.getAllDisplays();
 
     if (!display1 || !display2) {
       throw new Error("No enough displays");
