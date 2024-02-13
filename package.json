@@ -1,6 +1,6 @@
 {
   "name": "electron-as-wallpaper",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "author": {
     "name": "meslzy",
     "email": "i@meslzy.com",
@@ -31,25 +31,27 @@
     "test": "electron exmaples/demo/index.js",
     "prepublishOnly": "npm run build",
     "publish-me": "npm publish --access public",
-    "install": "node-gyp rebuild"
+    "install": "npm run gyp:configure && npm run gyp:rebuild"
   },
   "dependencies": {
     "bindings": "^1.5.0",
-    "node-addon-api": "^7.0.0",
+    "node-addon-api": "^7.1.0",
     "node-api-headers": "^1.1.0"
   },
   "devDependencies": {
     "@meslzy/eslint-config": "^0.5.7",
     "@meslzy/tsconfig": "^0.2.2",
     "@types/bindings": "^1.5.5",
-    "@types/node": "^20.10.6",
+    "@types/node": "^20.11.17",
     "typescript": "^5.3.3",
-    "rosepack": "^1.0.13",
-    "electron": "^27.2.0",
+    "rosepack": "^1.0.18",
+    "electron": "^28.2.2",
     "eslint": "^8.56.0"
   },
   "files": [
-    "dist"
+    "dist",
+    "lib",
+    "binding.gyp"
   ],
   "gypfile": true,
   "license": "mit"
