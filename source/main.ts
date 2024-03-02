@@ -12,10 +12,12 @@ interface AttachOptions {
   transparent?: boolean;
   /**
    * Forward mouse input-forwarding to the window.
+   * @default false
    */
   forwardMouseInput?: boolean;
   /**
    * Forward keyboard input-forwarding to the window.
+   * @default false
    */
   forwardKeyboardInput?: boolean;
 }

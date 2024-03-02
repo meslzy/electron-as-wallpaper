@@ -16,20 +16,17 @@ std::vector<Window> windows;
 
 auto makeWindowTransparent(HWND windowHandle, bool active) {
     if (active) {
-        SetWindowLong(windowHandle,GWL_EXSTYLE,GetWindowLong(windowHandle, GWL_EXSTYLE) | WS_EX_LAYERED);
+        SetWindowLong(windowHandle, GWL_EXSTYLE, GetWindowLong(windowHandle, GWL_EXSTYLE) | WS_EX_LAYERED);
         SetLayeredWindowAttributes(windowHandle, 0, 255, LWA_ALPHA);
     } else {
-        SetWindowLong(windowHandle,GWL_EXSTYLE,GetWindowLong(windowHandle, GWL_EXSTYLE) & ~WS_EX_LAYERED);
+        SetWindowLong(windowHandle, GWL_EXSTYLE, GetWindowLong(windowHandle, GWL_EXSTYLE) & ~WS_EX_LAYERED);
     }
 }
-
-//
 
 bool isDesktopActive() {
     HWND foreground = GetForegroundWindow();
     HWND desktop = GetDesktopWindow();
     HWND shell = GetShellWindow();
-
 
     HWND desktopWorkerW = FindWindowEx(nullptr, nullptr, "WorkerW", nullptr);
 
@@ -45,17 +42,14 @@ bool isDesktopActive() {
 
     HWND wallpaperWorkerW = FindWindowEx(nullptr, desktopWorkerW, "WorkerW", nullptr);
 
-    if (foreground == desktop) {
-        return true;
-    } else if (foreground == shell) {
-        return true;
-    } else if (foreground == desktopWorkerW) {
-        return true;
-    } else if (foreground == wallpaperWorkerW) {
-        return true;
-    } else {
-        return false;
-    }
+    bool isForeground = (
+            foreground == desktop ||
+            foreground == shell ||
+            foreground == desktopWorkerW ||
+            foreground == wallpaperWorkerW
+    );
+
+    return isForeground;
 }
 
 void postMouseMessage(UINT uMsg, WPARAM wParam, POINT point) {
@@ -180,26 +174,26 @@ LRESULT CALLBACK handleWindowMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 }
 
 HWND rawInputWindowHandle = nullptr;
+LPCSTR rawInputWindowClassName = "RawInputWindow";
 
 void startForwardingRawInput(Napi::Env env) {
     if (rawInputWindowHandle != nullptr) {
         return;
     }
 
-    HINSTANCE hInstance = GetModuleHandle(nullptr);
+    HINSTANCE hInstance = GetModuleHandleA(nullptr);
 
     WNDCLASS wc = {};
     wc.lpfnWndProc = handleWindowMessage;
     wc.hInstance = hInstance;
-    wc.lpszClassName = "RawInputWindow";
+    wc.lpszClassName = rawInputWindowClassName;
 
     if (!RegisterClass(&wc)) {
         Napi::TypeError::New(env, "Could not register raw input window class").ThrowAsJavaScriptException();
         return;
     }
 
-    rawInputWindowHandle = CreateWindowEx(0, wc.lpszClassName, nullptr, 0, 0, 0, 0, 0, HWND_MESSAGE, nullptr, hInstance,
-                                          nullptr);
+    rawInputWindowHandle = CreateWindowEx(0, wc.lpszClassName, nullptr, 0, 0, 0, 0, 0, HWND_MESSAGE, nullptr, hInstance, nullptr);
 
     if (!rawInputWindowHandle) {
         Napi::TypeError::New(env, "Could not create raw input window").ThrowAsJavaScriptException();
@@ -227,11 +221,14 @@ void stopForwardingRawInput() {
         return;
     }
 
+    HINSTANCE hInstance = GetModuleHandleA(nullptr);
+
     DestroyWindow(rawInputWindowHandle);
+
+    UnregisterClass(rawInputWindowClassName, hInstance);
+
     rawInputWindowHandle = nullptr;
 }
-
-//
 
 void attach(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
@@ -269,10 +266,10 @@ void attach(const Napi::CallbackInfo &info) {
     }
 
     Window window = {
-        windowHandle,
-        transparent,
-        forwardMouseInput,
-        forwardKeyboardInput
+            windowHandle,
+            transparent,
+            forwardMouseInput,
+            forwardKeyboardInput
     };
 
     SetParent(windowHandle, workerW);
