@@ -43,7 +43,12 @@
   // or
   const {attach, detach, refresh} = require("electron-as-wallpaper");
   
-  attach(mainWindow);
+  attach(mainWindow, {
+    transparent: true,
+    forwardKeyboardInput: true,
+    forwardMouseInput: true,
+  });
+
   detach(mainWindow);
   
   // if the window closed before detach, you can call refresh

@@ -1,6 +1,6 @@
 {
   "name": "electron-as-wallpaper",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "author": {
     "name": "meslzy",
     "email": "i@meslzy.com",
@@ -35,17 +35,17 @@
   },
   "dependencies": {
     "bindings": "^1.5.0",
-    "node-addon-api": "^7.1.0",
+    "node-addon-api": "^8.0.0",
     "node-api-headers": "^1.1.0"
   },
   "devDependencies": {
     "@meslzy/eslint-config": "^0.5.7",
-    "@meslzy/tsconfig": "^0.2.3",
+    "@meslzy/tsconfig": "^0.2.5",
     "@types/bindings": "^1.5.5",
-    "@types/node": "^20.11.24",
-    "typescript": "^5.3.3",
+    "@types/node": "^20.11.25",
+    "typescript": "^5.4.2",
     "rosepack": "^1.0.18",
-    "electron": "^29.1.0",
+    "electron": "^29.1.1",
     "eslint": "^8.57.0"
   },
   "files": [

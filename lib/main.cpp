@@ -1,8 +1,6 @@
 #include <node_api.h>
 #include <napi.h>
-
 #include <windows.h>
-#include <winuser.h>
 #include <hidusage.h>
 
 struct Window {
@@ -52,11 +50,15 @@ bool isDesktopActive() {
     return isForeground;
 }
 
-void postMouseMessage(UINT uMsg, WPARAM wParam, POINT point) {
-    if (!isDesktopActive()) {
-        return;
+void postMouseMessage(UINT uMsg, WPARAM wParam) {
+    for (auto &window: windows) {
+        if (window.forwardMouseInput) {
+            PostMessageA(window.handle, uMsg, wParam, 0);
+        }
     }
+}
 
+void postMouseMessage(UINT uMsg, WPARAM wParam, POINT point) {
     for (auto &window: windows) {
         if (window.forwardMouseInput) {
             ScreenToClient(window.handle, &point);
@@ -65,16 +67,12 @@ void postMouseMessage(UINT uMsg, WPARAM wParam, POINT point) {
             lParam <<= 16;
             lParam |= static_cast<std::uint32_t>(point.x);
 
-            PostMessage(window.handle, uMsg, wParam, lParam);
+            PostMessageA(window.handle, uMsg, wParam, lParam);
         }
     }
 }
 
 void postKeyboardMessage(UINT uMsg, WPARAM wParam, UINT makeCode, bool isPressed) {
-    if (!isDesktopActive()) {
-        return;
-    }
-
     std::uint32_t lParam = 1u;
 
     lParam |= static_cast<std::uint32_t>(makeCode) << 16;
@@ -88,13 +86,13 @@ void postKeyboardMessage(UINT uMsg, WPARAM wParam, UINT makeCode, bool isPressed
 
     for (auto &window: windows) {
         if (window.forwardKeyboardInput) {
-            PostMessage(window.handle, uMsg, wParam, lParam);
+            PostMessageA(window.handle, uMsg, wParam, lParam);
         }
     }
 }
 
 LRESULT CALLBACK handleWindowMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-    if (uMsg == WM_INPUT) {
+    if (isDesktopActive() && uMsg == WM_INPUT) {
         UINT dwSize = sizeof(RAWINPUT);
         static BYTE lpb[sizeof(RAWINPUT)];
 
@@ -108,47 +106,59 @@ LRESULT CALLBACK handleWindowMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
 
                 GetCursorPos(&point);
 
-                switch (raw->data.mouse.ulButtons) {
+                RAWMOUSE rawMouse = raw->data.mouse;
+
+                if ((rawMouse.usButtonFlags & RI_MOUSE_WHEEL) == RI_MOUSE_WHEEL || (rawMouse.usButtonFlags & RI_MOUSE_HWHEEL) == RI_MOUSE_HWHEEL) {
+                    bool isHorizontalScroll = (rawMouse.usButtonFlags & RI_MOUSE_HWHEEL) == RI_MOUSE_HWHEEL;
+
+                    auto wheelDelta = (float) (short) rawMouse.usButtonData;
+
+                    if (isHorizontalScroll) {
+                        postMouseMessage(WM_HSCROLL, wheelDelta > 0 ? SB_LINELEFT : SB_LINERIGHT);
+                    } else {
+                        postMouseMessage(WM_VSCROLL, wheelDelta > 0 ? SB_LINEUP : SB_LINEDOWN);
+                    }
+
+                    break;
+                }
+
+                switch (rawMouse.ulButtons) {
                     case RI_MOUSE_LEFT_BUTTON_DOWN: {
-                        postMouseMessage(WM_LBUTTONDOWN, 0x0001, point);
+                        postMouseMessage(WM_LBUTTONDOWN, MK_LBUTTON, point);
                         break;
                     }
                     case RI_MOUSE_LEFT_BUTTON_UP: {
-                        postMouseMessage(WM_LBUTTONUP, 0x0001, point);
-                        break;
-                    }
-                    case RI_MOUSE_MIDDLE_BUTTON_DOWN: {
-                        postMouseMessage(WM_MBUTTONDOWN, 0x0010, point);
-                        break;
-                    }
-                    case RI_MOUSE_MIDDLE_BUTTON_UP: {
-                        postMouseMessage(WM_MBUTTONUP, 0x0010, point);
+                        postMouseMessage(WM_LBUTTONUP, MK_LBUTTON, point);
                         break;
                     }
                     case RI_MOUSE_RIGHT_BUTTON_DOWN: {
-                        postMouseMessage(WM_RBUTTONDOWN, 0x0002, point);
+                        postMouseMessage(WM_RBUTTONDOWN, MK_RBUTTON, point);
                         break;
                     }
                     case RI_MOUSE_RIGHT_BUTTON_UP: {
-                        postMouseMessage(WM_RBUTTONUP, 0x0002, point);
+                        postMouseMessage(WM_RBUTTONUP, MK_RBUTTON, point);
                         break;
                     }
-                    case RI_MOUSE_BUTTON_4_DOWN: {
-                        postMouseMessage(WM_XBUTTONDOWN, 0x0020, point);
+                    case RI_MOUSE_MIDDLE_BUTTON_DOWN: {
+                        postMouseMessage(WM_MBUTTONDOWN, MK_MBUTTON, point);
                         break;
                     }
-                    case RI_MOUSE_BUTTON_4_UP: {
-                        postMouseMessage(WM_XBUTTONUP, 0x0020, point);
+                    case RI_MOUSE_MIDDLE_BUTTON_UP: {
+                        postMouseMessage(WM_MBUTTONUP, MK_MBUTTON, point);
                         break;
                     }
-                    case RI_MOUSE_BUTTON_5_DOWN: {
-                        postMouseMessage(WM_XBUTTONDOWN, 0x0040, point);
+                    case RI_MOUSE_BUTTON_4_DOWN:
+                        postMouseMessage(WM_XBUTTONDOWN, MAKEWPARAM(0, XBUTTON1), point);
                         break;
-                    }
-                    case RI_MOUSE_BUTTON_5_UP: {
-                        postMouseMessage(WM_XBUTTONUP, 0x0040, point);
+                    case RI_MOUSE_BUTTON_4_UP:
+                        postMouseMessage(WM_XBUTTONUP, MAKEWPARAM(0, XBUTTON1), point);
                         break;
-                    }
+                    case RI_MOUSE_BUTTON_5_DOWN:
+                        postMouseMessage(WM_XBUTTONDOWN, MAKEWPARAM(0, XBUTTON2), point);
+                        break;
+                    case RI_MOUSE_BUTTON_5_UP:
+                        postMouseMessage(WM_XBUTTONUP, MAKEWPARAM(0, XBUTTON2), point);
+                        break;
                     default: {
                         postMouseMessage(WM_MOUSEMOVE, 0x0020, point);
                         break;
@@ -158,10 +168,12 @@ LRESULT CALLBACK handleWindowMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
                 break;
             }
             case RIM_TYPEKEYBOARD: {
-                auto message = raw->data.keyboard.Message;
-                auto vKey = raw->data.keyboard.VKey;
-                auto makeCode = raw->data.keyboard.MakeCode;
-                auto flags = raw->data.keyboard.Flags;
+                RAWKEYBOARD rawKeyboard = raw->data.keyboard;
+
+                auto message = rawKeyboard.Message;
+                auto vKey = rawKeyboard.VKey;
+                auto makeCode = rawKeyboard.MakeCode;
+                auto flags = rawKeyboard.Flags;
 
                 postKeyboardMessage(message, vKey, makeCode, flags & RI_KEY_BREAK);
 
