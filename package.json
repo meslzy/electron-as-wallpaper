@@ -1,6 +1,6 @@
 {
   "name": "electron-as-wallpaper",
-  "version": "1.0.8",
+  "version": "2.0.0",
   "author": {
     "name": "meslzy",
     "email": "i@meslzy.com",
@@ -11,7 +11,7 @@
   "bugs": {
     "url": "https://github.com/meslzy/electron-as-wallpaper/issues"
   },
-  "homepage": "https://github.com/meslzy/electron-as-wallpaper#readme",
+  "homepage": "https://github.com/meslzy/electron-as-wallpaper",
   "publishConfig": {
     "access": "public"
   },
@@ -21,14 +21,15 @@
   ],
   "types": "dist/main.d.ts",
   "main": "dist/main.js",
-  "type": "commonjs",
+  "type": "module",
   "scripts": {
     "watch": "rosepack -w",
     "build": "rosepack",
     "lint": "eslint . --ext .ts --fix",
     "gyp:configure": "node-gyp configure",
     "gyp:rebuild": "node-gyp rebuild",
-    "test": "npm run gyp:rebuild && electron exmaples/playground/index.js",
+    "gyp:build": "node-gyp build",
+    "test": "npm run gyp:rebuild && electron exmaples/demo/index.js",
     "prepublishOnly": "npm run build",
     "publish-me": "npm publish --access public",
     "install": "npm run gyp:configure && npm run gyp:rebuild"
@@ -39,18 +40,18 @@
     "node-api-headers": "^1.1.0"
   },
   "devDependencies": {
-    "@meslzy/eslint-config": "^0.5.7",
-    "@meslzy/tsconfig": "^0.2.5",
+    "@meslzy/eslint": "^1.0.2",
+    "@meslzy/tsconfig": "^0.2.6",
     "@types/bindings": "^1.5.5",
-    "@types/node": "^20.11.25",
-    "typescript": "^5.4.2",
-    "rosepack": "^1.0.18",
-    "electron": "^29.1.1",
-    "eslint": "^8.57.0"
+    "@types/node": "^20.12.11",
+    "typescript": "^5.4.5",
+    "rosepack": "^1.0.19",
+    "electron": "^30.0.3",
+    "eslint": "^9.2.0"
   },
   "files": [
     "dist",
-    "lib",
+    "library",
     "binding.gyp"
   ],
   "gypfile": true,

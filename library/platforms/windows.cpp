@@ -1,5 +1,6 @@
-#include <node_api.h>
 #include <napi.h>
+#include <node_api.h>
+
 #include <windows.h>
 #include <hidusage.h>
 
@@ -273,7 +274,7 @@ void attach(const Napi::CallbackInfo &info) {
     }, NULL);
 
     if (workerW == nullptr) {
-        Napi::TypeError::New(env, "couldn't locate WorkerW").ThrowAsJavaScriptException();
+        Napi::TypeError::New(env, "Could not find WorkerW").ThrowAsJavaScriptException();
         return;
     }
 
@@ -284,8 +285,6 @@ void attach(const Napi::CallbackInfo &info) {
             forwardKeyboardInput
     };
 
-    SetParent(windowHandle, workerW);
-
     if (transparent) {
         makeWindowTransparent(windowHandle, true);
     }
@@ -295,6 +294,8 @@ void attach(const Napi::CallbackInfo &info) {
     if (!windows.empty()) {
         startForwardingRawInput(env);
     }
+
+    SetParent(windowHandle, workerW);
 }
 
 void detach(const Napi::CallbackInfo &info) {
@@ -324,14 +325,8 @@ void detach(const Napi::CallbackInfo &info) {
 }
 
 void refresh(const Napi::CallbackInfo &info) {
+    Napi::Env env = info.Env();
+    Napi::HandleScope scope(env);
+
     SystemParametersInfo(SPI_SETDESKWALLPAPER, 0, nullptr, SPIF_SENDCHANGE);
 }
-
-Napi::Object Init(Napi::Env env, Napi::Object exports) {
-    exports.Set(Napi::String::New(env, "attach"), Napi::Function::New(env, attach));
-    exports.Set(Napi::String::New(env, "detach"), Napi::Function::New(env, detach));
-    exports.Set(Napi::String::New(env, "refresh"), Napi::Function::New(env, refresh));
-    return exports;
-}
-
-NODE_API_MODULE(addon, Init);

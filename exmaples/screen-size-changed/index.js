@@ -10,7 +10,7 @@ app.on("ready", async () => {
     show: false,
     webPreferences: {
       backgroundThrottling: false,
-    }
+    },
   });
   const win2 = new BrowserWindow({
     enableLargerThanScreen: true,
@@ -19,7 +19,7 @@ app.on("ready", async () => {
     show: false,
     webPreferences: {
       backgroundThrottling: false,
-    }
+    },
   });
 
   await win1.loadURL("https://www.nayuki.io/res/full-screen-clock-javascript/full-screen-clock-12hr-with-seconds.html");

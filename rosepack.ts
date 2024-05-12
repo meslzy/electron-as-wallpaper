@@ -4,7 +4,7 @@ export default defineRosepack((config) => ({
   clean: config.mode === "production",
   format: [
     "dts",
-    "cjs",
+    "esm",
   ],
   input: {
     main: "source/main.ts",

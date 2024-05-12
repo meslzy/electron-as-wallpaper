@@ -7,16 +7,19 @@ const electronAsWallpaper = bindings("electron-as-wallpaper");
 interface AttachOptions {
   /**
    * Makes the window transparent.
+   * platform: Windows
    * @default false
    */
   transparent?: boolean;
   /**
    * Forward mouse input-forwarding to the window.
+   * platform: Windows
    * @default false
    */
   forwardMouseInput?: boolean;
   /**
    * Forward keyboard input-forwarding to the window.
+   * platform: Windows
    * @default false
    */
   forwardKeyboardInput?: boolean;
@@ -30,6 +33,7 @@ const attachOptions: AttachOptions = {
 
 /**
  * Set window behind desktop icons
+ * platform: Windows
  */
 const attach = (win: BrowserWindow, options?: AttachOptions) => {
   if (win === undefined) {
@@ -48,6 +52,7 @@ const attach = (win: BrowserWindow, options?: AttachOptions) => {
 
 /**
  * Remove a window from desktop icons
+ * platform: Windows
  */
 const detach = (win: BrowserWindow) => {
   if (win === undefined) {
@@ -62,7 +67,8 @@ const detach = (win: BrowserWindow) => {
 };
 
 /**
- * Refresh desktop
+ * Setting default desktop wallpaper
+ * platform: Windows
  */
 const refresh = () => {
   electronAsWallpaper.refresh();

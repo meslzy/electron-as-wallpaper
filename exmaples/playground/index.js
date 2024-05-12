@@ -1,6 +1,6 @@
 const {app, BrowserWindow, Tray, Menu} = require("electron");
 
-const {attach, detach, refresh} = require("../../dist/main");
+const {attach, detach, refresh, stick, unstick} = require("../../dist/main");
 
 app.on("ready", async () => {
   const win = new BrowserWindow({
@@ -14,7 +14,9 @@ app.on("ready", async () => {
   const tray = new Tray(`${__dirname}/icon.png`);
 
   const contextMenu = Menu.buildFromTemplate([{
-    id: "attach", label: "Attach", click: () => {
+    id: "attach",
+    label: "Attach",
+    click: () => {
       try {
         attach(win, {
           transparent: true,
@@ -26,7 +28,9 @@ app.on("ready", async () => {
       }
     },
   }, {
-    id: "detach", label: "Detach", click: () => {
+    id: "detach",
+    label: "Detach",
+    click: () => {
       try {
         detach(win);
       } catch (e) {
@@ -34,7 +38,9 @@ app.on("ready", async () => {
       }
     },
   }, {
-    id: "refresh", label: "Refresh", click: () => {
+    id: "refresh",
+    label: "Refresh",
+    click: () => {
       try {
         refresh();
       } catch (e) {
@@ -42,7 +48,29 @@ app.on("ready", async () => {
       }
     },
   }, {
-    id: "quit", label: "Quit", click: () => {
+    id: "stick",
+    label: "Stick",
+    click: () => {
+      try {
+        stick(win);
+      } catch (e) {
+        console.error(e);
+      }
+    },
+  }, {
+    id: "unstick",
+    label: "Unstick",
+    click: () => {
+      try {
+        unstick(win);
+      } catch (e) {
+        console.error(e);
+      }
+    },
+  }, {
+    id: "quit",
+    label: "Quit",
+    click: () => {
       app.quit();
     },
   }]);
@@ -56,4 +84,6 @@ app.on("ready", async () => {
   });
 
   win.show();
+
+  console.log(win.getNativeWindowHandle().readInt32LE(0));
 });
