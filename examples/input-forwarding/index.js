@@ -1,6 +1,6 @@
-const {app, BrowserWindow, screen} = require("electron");
+import {app, BrowserWindow, screen} from "electron";
 
-const {attach, refresh} = require("../../dist/main");
+import {attach, refresh} from "../../dist/main.js";
 
 app.on("ready", async () => {
   const win = new BrowserWindow({

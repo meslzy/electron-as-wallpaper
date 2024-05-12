@@ -1,6 +1,12 @@
-const {app, BrowserWindow} = require("electron");
+import {app, BrowserWindow} from "electron";
 
-const {attach} = require("../../dist/main");
+import {attach} from "../../dist/main.js";
+
+import url from "node:url";
+import path from "node:path";
+
+const filename = url.fileURLToPath(import.meta.url);
+const dirname = path.dirname(filename);
 
 app.on("ready", async () => {
   const win = new BrowserWindow({
@@ -13,7 +19,7 @@ app.on("ready", async () => {
     transparent: true,
   });
 
-  await win.loadURL(`file://${__dirname}/index.html`);
+  await win.loadURL(`file://${dirname}/index.html`);
 
   win.webContents.openDevTools({
     mode: "detach",

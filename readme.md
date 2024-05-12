@@ -35,7 +35,7 @@
 ## Getting Started (✅)
 
 - ### Installation (⏬)
-    - `npm install electron-as-wallpaper --save`
+  - `npm install electron-as-wallpaper --save`
 
 - ### How to use (🌠)
   ```js
@@ -56,9 +56,10 @@
   ```
 
 - ### Examples
-    - [transparent](exmaples/transparent/index.js)
-    - [input forwarding](exmaples/input-forwarding/index.js)
-    - [screen size changed](exmaples/screen-size-changed/index.js)
+  - [demo](examples/demo/index.js)
+  - [transparent](examples/transparent/index.js)
+  - [input forwarding](examples/input-forwarding/index.js)
+  - [screen size changed](examples/screen-size-changed/index.js)
 
 ---
 

@@ -1,8 +1,12 @@
-const {app, screen, ipcMain, BrowserWindow} = require("electron");
+import {app, BrowserWindow, ipcMain, screen} from "electron";
 
-const {attach, detach, refresh} = require("../../dist/main");
+import {attach, detach, refresh} from "../../dist/main.js";
 
-const path = require("node:path");
+import url from "node:url";
+import path from "node:path";
+
+const filename = url.fileURLToPath(import.meta.url);
+const dirname = path.dirname(filename);
 
 /**
  * @type {Electron.CrossProcessExports.BrowserWindow}
@@ -45,7 +49,7 @@ app.on("ready", async () => {
     alwaysOnTop: true,
     autoHideMenuBar: true,
     webPreferences: {
-      preload: path.join(__dirname, "preload.js"),
+      preload: path.join(dirname, "preload.mjs"),
     },
   });
 
@@ -61,7 +65,7 @@ app.on("ready", async () => {
 
   wallpaper.setBounds(screen.getPrimaryDisplay().bounds);
 
-  await win.loadURL(`file://${path.join(__dirname, "index.html")}`);
+  await win.loadURL(`file://${path.join(dirname, "index.html")}`);
 
   win.show();
 });
