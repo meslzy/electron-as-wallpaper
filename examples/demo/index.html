@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Electron as wallpaper</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      border: none;
+    }
+
+    body {
+      background: transparent;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      gap: 12px;
+
+      height: 100vh;
+      width: 100%;
+
+      overflow: hidden;
+
+      input {
+        border-radius: 8px;
+        padding: 8px;
+        width: 60%;
+
+        text-align: center;
+        border: gray 1px solid;
+      }
+
+      div {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 12px;
+      }
+
+      button {
+        cursor: pointer;
+        border-radius: 8px;
+        padding: 8px 16px;
+        color: white;
+      }
+
+      button:active {
+        transform: scale(1.05);
+      }
+    }
+  </style>
+</head>
+<body>
+<input type="text" placeholder="url" id="url" value="https://www.nayuki.io/res/full-screen-clock-javascript/full-screen-clock-12hr-with-seconds.html"/>
+
+<div>
+  <button style="background:#34a0a6;" id="attach">Attach</button>
+  <button style="background:#ad1d02;" id="detach">Detach</button>
+  <button style="background:#acb06b;" id="reset">Reset</button>
+</div>
+
+<div>
+  <button style="background:#34a0a6;" id="show">Show</button>
+  <button style="background:#ad1d02;" id="hide">Hide</button>
+</div>
+
+<script>
+  ipc.url(document.getElementById("url").value);
+
+  document.getElementById("url").addEventListener("change", function () {
+    const url = document.getElementById("url").value;
+    ipc.url(url);
+  });
+
+  document.getElementById("attach").addEventListener("click", function () {
+    ipc.attach();
+  });
+
+  document.getElementById("detach").addEventListener("click", function () {
+    ipc.detach();
+  });
+
+  document.getElementById("reset").addEventListener("click", function () {
+    ipc.reset();
+  });
+
+  document.getElementById("show").addEventListener("click", function () {
+    ipc.show();
+  });
+
+  document.getElementById("hide").addEventListener("click", function () {
+    ipc.hide();
+  });
+</script>
+</body>
+</html>

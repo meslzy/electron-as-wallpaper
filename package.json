@@ -1,0 +1,54 @@
+{
+  "name": "electron-as-wallpaper",
+  "version": "2.0.0",
+  "author": {
+    "name": "meslzy",
+    "email": "i@meslzy.com",
+    "url": "https://meslzy.com/"
+  },
+  "description": "set your electron window as wallpaper behind desktop icons",
+  "repository": "github:meslzy/electron-as-wallpaper",
+  "bugs": {
+    "url": "https://github.com/meslzy/electron-as-wallpaper/issues"
+  },
+  "homepage": "https://github.com/meslzy/electron-as-wallpaper",
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "electron",
+    "wallpaper"
+  ],
+  "types": "dist/main.d.ts",
+  "main": "dist/main.js",
+  "type": "module",
+  "scripts": {
+    "watch": "tsup --watch",
+    "build": "tsup",
+    "neon:build": "cargo-cp-artifact -nc build/neon.node -- cargo build --message-format=json-render-diagnostics",
+    "neon:release": "npm run neon:build -- --release",
+    "install": "npm run neon:release",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "bindings": "^1.5.0",
+    "cargo-cp-artifact": "^0.1.9"
+  },
+  "devDependencies": {
+    "@meslzy/eslint": "^1.0.6",
+    "@meslzy/tsconfig": "^0.2.8",
+    "@types/bindings": "^1.5.5",
+    "@types/node": "^22.7.5",
+    "electron": "^32.2.1",
+    "eslint": "^9.12.0",
+    "tsup": "^8.3.0",
+    "typescript": "^5.6.3"
+  },
+  "files": [
+    "dist",
+    "src",
+    "Cargo.toml",
+    "license"
+  ],
+  "license": "mit"
+}

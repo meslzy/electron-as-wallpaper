@@ -1,0 +1,13 @@
+{
+  "extends": "@meslzy/tsconfig",
+  "compilerOptions": {
+    "rootDir": "lib",
+    "outDir": "dist"
+  },
+  "include": [
+    "lib"
+  ],
+  "exclude": [
+    "dist"
+  ]
+}

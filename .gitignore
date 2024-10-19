@@ -1,0 +1,13 @@
+# ide
+.idea/
+.vscode/
+
+# node
+node_modules/
+
+# build
+build/
+dist/
+
+# Rust
+target/
