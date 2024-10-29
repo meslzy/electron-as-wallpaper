@@ -1,6 +1,6 @@
 {
   "name": "electron-as-wallpaper",
-  "version": "2.0.0",
+  "version": "2.0.2",
   "author": {
     "name": "meslzy",
     "email": "i@meslzy.com",
@@ -20,7 +20,14 @@
     "wallpaper"
   ],
   "types": "dist/main.d.ts",
-  "main": "dist/main.js",
+  "main": "dist/main.cjs",
+  "module": "dist/main.js",
+  "exports": {
+    ".": {
+      "import": "./dist/main.js",
+      "require": "./dist/main.cjs"
+    }
+  },
   "type": "module",
   "scripts": {
     "watch": "tsup --watch",

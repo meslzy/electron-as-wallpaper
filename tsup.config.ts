@@ -2,7 +2,10 @@ import { defineConfig } from "tsup";
 
 export default defineConfig(() => ({
   dts: true,
-  format: "esm",
+  format: [
+    "esm",
+    "cjs",
+  ],
   entry: {
     main: "lib/main.ts",
   },

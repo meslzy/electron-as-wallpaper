@@ -37,7 +37,7 @@
 ## Installation (⏬)
 
 ```bash
-npm install electron-as-wallpaper@2.0.0 --save
+npm install electron-as-wallpaper --save
 ```
 
 ## How to use (🌠)
