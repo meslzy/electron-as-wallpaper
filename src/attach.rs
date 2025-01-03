@@ -10,29 +10,27 @@ use crate::input::start_input_forwarding;
 use crate::window::{get_window_handle, toggle_window_transparent};
 
 extern "system" fn enum_window(window: HWND, ref_worker_w: LPARAM) -> BOOL {
-    let shell_dll_def_view = unsafe {
-        WindowsAndMessaging::FindWindowExA(window, HWND::default(), s!("SHELLDLL_DefView"), None)
-            .unwrap_or(HWND::default())
-    };
-
-    if HWND::is_invalid(&shell_dll_def_view) {
-        return BOOL(1);
-    }
-
-    let worker_w = unsafe {
-        WindowsAndMessaging::FindWindowExA(HWND::default(), window, s!("WorkerW"), None)
-            .unwrap_or(HWND::default())
-    };
-
-    if HWND::is_invalid(&worker_w) {
-        return BOOL(1);
-    }
-
     unsafe {
-        *(ref_worker_w.0 as *mut HWND) = worker_w;
-    }
+        let shell_dll_def_view = WindowsAndMessaging::FindWindowExA(
+            window,
+            HWND::default(),
+            s!("SHELLDLL_DefView"),
+            None,
+        )
+        .unwrap_or(HWND::default());
 
-    BOOL(0)
+        if !HWND::is_invalid(&shell_dll_def_view) {
+            let worker_w =
+                WindowsAndMessaging::FindWindowExA(HWND::default(), window, s!("WorkerW"), None)
+                    .unwrap_or(HWND::default());
+
+            if !HWND::is_invalid(&worker_w) {
+                *(ref_worker_w.0 as *mut HWND) = worker_w;
+            }
+        }
+
+        BOOL(1)
+    }
 }
 
 #[derive(Default)]
@@ -64,40 +62,49 @@ pub fn attach(mut cx: FunctionContext) -> JsResult<JsUndefined> {
     let hwnd = get_window_handle(&mut cx)?;
     let options = AttachOptions::from_cx(&mut cx)?;
 
-    let progman_hwnd = unsafe { WindowsAndMessaging::FindWindowA(s!("Progman"), None).unwrap() };
-
     unsafe {
-        WindowsAndMessaging::SendMessageA(progman_hwnd, 0x052C, WPARAM(0x0000000D), LPARAM(0));
-        WindowsAndMessaging::SendMessageA(progman_hwnd, 0x052C, WPARAM(0x0000000D), LPARAM(1));
-    }
+        let progman_hwnd = WindowsAndMessaging::FindWindowA(s!("Progman"), None).unwrap();
 
-    let mut worker_w: HWND = HWND::default();
+        WindowsAndMessaging::SendMessageTimeoutA(
+            progman_hwnd,
+            0x052C,
+            WPARAM(0xD),
+            LPARAM(0x1),
+            WindowsAndMessaging::SMTO_NORMAL,
+            1000,
+            None,
+        );
 
-    unsafe {
+        let mut worker_w: HWND = HWND::default();
+
         WindowsAndMessaging::EnumWindows(
             Some(enum_window),
             LPARAM(&mut worker_w as *mut HWND as isize),
         )
-        .unwrap_or_default();
-    }
+        .unwrap();
 
-    if HWND::is_invalid(&worker_w) {
-        return cx.throw_error("WorkerW not found");
-    }
+        if HWND::is_invalid(&worker_w) {
+            worker_w = WindowsAndMessaging::FindWindowExA(
+                progman_hwnd,
+                HWND::default(),
+                s!("WorkerW"),
+                None,
+            )
+            .unwrap();
+        }
 
-    unsafe {
         WindowsAndMessaging::SetParent(hwnd, worker_w).unwrap();
+
+        if options.transparent {
+            toggle_window_transparent(hwnd, true);
+        }
+
+        start_input_forwarding(
+            hwnd,
+            options.forward_mouse_input,
+            options.forward_keyboard_input,
+        );
+
+        Ok(cx.undefined())
     }
-
-    if options.transparent {
-        toggle_window_transparent(hwnd, true);
-    }
-
-    start_input_forwarding(
-        hwnd,
-        options.forward_mouse_input,
-        options.forward_keyboard_input,
-    );
-
-    Ok(cx.undefined())
 }
